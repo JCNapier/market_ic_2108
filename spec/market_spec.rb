@@ -61,29 +61,15 @@ describe Market do
       market.add_vendor(vendor3)
     end
 
-    it '#item array' do 
-      expect(market.item_array).to eq([item1, item2, item4, item3])
+    it '#items' do 
+      expect(market.items).to eq([item1, item2, item4, item3])
     end
 
-    it '#quantity hash' do 
-      expect(market.quantity_hash(item1)).to eq({
-        quantity: 100,
-        vendors: [vendor1, vendor3]
-      })
+    it '#total_quanity_per_item' do 
+      expect(market.total_quantity_per_item(item1) ).to eq(100)
     end
 
-    it '#item hash' do 
-      expected = {
-        item1 => {},
-        item2 => {},
-        item4 => {},
-        item3 => {},
-        }
-
-      expect(market.item_hash).to eq(expected)
-    end
-
-    xit '#total inventory' do 
+    it '#total inventory' do 
       expected = {
       item1 => {
         quantity: 100,
@@ -104,6 +90,10 @@ describe Market do
       }
 
       expect(market.total_inventory).to eq(expected)
+    end
+
+    it '#overstocked_items' do 
+      expect(market.overstocked_items).to eq([item1])
     end
   end 
 end

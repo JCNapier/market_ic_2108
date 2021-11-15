@@ -24,21 +24,32 @@ class Market
   def item_array 
     @vendors.map do |vendor|
       vendor.inventory.keys
-    end.flatten.uniq
+    end.flatten
   end
 
-  def quantity_hash(item) 
-
+  def items 
+   item_array.uniq
   end
 
-  def item_hash 
-    item_array.reduce({}) do |hash, item|
-      hash[item] = {}
+  def total_quantity_per_item(item) 
+    @vendors.map do |vendor|
+      vendor.inventory[item]
+    end.sum
+  end
+
+  def total_inventory
+    items.reduce({}) do |hash, item|
+      hash[item] = {} if !hash[item].is_a?(Hash)
+      hash[item][:quantity] = total_quantity_per_item(item) 
+      hash[item][:vendors]  = vendors_that_sell(item)
       hash
     end
   end
 
-  def total_inventory
-
+  def overstocked_items
+    items.find_all do |item|
+      total_quantity_per_item(item) > 50 && 
+      item_array.count {|obj| obj == item} > 1
+    end
   end
 end
